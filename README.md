@@ -1,2 +1,2 @@
-# anshu9s-website
+# anshu
 Personal website of anshu9s

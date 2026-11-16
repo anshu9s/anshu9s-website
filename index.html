@@ -1,16 +1,24 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#08090d">
+<meta name="color-scheme" content="dark">
 <meta name="description" content="Anshu's personal space — socials, music and little things that make it mine.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Anshu — This is my space">
+<meta property="og:description" content="Socials, music and little things that make it mine.">
+<meta name="twitter:card" content="summary">
 <title>Anshu — This is my space</title>
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%239c7bff'/%3E%3Cstop offset='1' stop-color='%2375d9ed'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%2308090d'/%3E%3Ctext x='32' y='46' font-size='38' font-weight='800' text-anchor='middle' fill='url(%23g)' font-family='sans-serif'%3EA%3C/text%3E%3C/svg%3E">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<noscript><style>.reveal{opacity:1!important;transform:none!important}</style></noscript>
 
 <style>
 :root{
@@ -25,15 +33,18 @@
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
 
 body{
 min-height:100vh;
 background:var(--bg);
 color:var(--ink);
 font-family:"DM Sans",sans-serif;
-overflow-x:hidden
+overflow-x:hidden;
+-webkit-font-smoothing:antialiased
 }
+
+::selection{background:#9c7bff55}
 
 body:before{
 content:"";
@@ -44,6 +55,26 @@ background:
 radial-gradient(ellipse at 20% 15%,rgba(122,92,255,.18),transparent 34%),
 radial-gradient(ellipse at 85% 30%,rgba(68,202,225,.13),transparent 32%),
 radial-gradient(ellipse at 50% 100%,rgba(221,104,177,.12),transparent 35%)
+}
+
+/* soft light that follows the cursor (desktop only, set by JS) */
+.spot{
+position:fixed;
+inset:0;
+z-index:-1;
+pointer-events:none;
+background:radial-gradient(520px circle at var(--x,50%) var(--y,28%),rgba(156,123,255,.12),transparent 62%)
+}
+
+.progress{
+position:fixed;
+top:0;left:0;
+width:100%;
+height:2px;
+z-index:20;
+transform-origin:0 50%;
+transform:scaleX(0);
+background:linear-gradient(90deg,var(--violet),var(--cyan),var(--pink))
 }
 
 .noise{
@@ -78,17 +109,42 @@ to{transform:translate(100px,80px) scale(1.25)}
 a{color:inherit;text-decoration:none}
 button{font-family:inherit}
 
+a:focus-visible,button:focus-visible{
+outline:2px solid var(--cyan);
+outline-offset:3px;
+border-radius:12px
+}
+
 .shell{
 width:min(100% - 40px,1050px);
 margin:auto
 }
 
+/* sticky header that blurs once you scroll */
+.top{
+position:sticky;
+top:0;
+z-index:10;
+border-bottom:1px solid transparent;
+transition:background .3s,border-color .3s,backdrop-filter .3s
+}
+
+.top.scrolled{
+background:rgba(8,9,13,.62);
+backdrop-filter:blur(16px);
+-webkit-backdrop-filter:blur(16px);
+border-bottom-color:var(--line)
+}
+
 nav{
-height:82px;
+height:78px;
 display:flex;
 align-items:center;
-justify-content:space-between
+justify-content:space-between;
+transition:height .3s
 }
+
+.top.scrolled nav{height:62px}
 
 .logo{
 font:800 14px Manrope;
@@ -122,7 +178,7 @@ display:grid;
 grid-template-columns:1.05fr .95fr;
 align-items:center;
 gap:30px;
-padding:45px 0 75px
+padding:30px 0 70px
 }
 
 .kicker{
@@ -152,6 +208,7 @@ h1 .shine{
 background:linear-gradient(100deg,#fff 5%,#c8b8ff 43%,#80d9e9 78%,#fff);
 background-size:220% auto;
 color:transparent;
+-webkit-background-clip:text;
 background-clip:text;
 animation:shine 7s linear infinite
 }
@@ -183,6 +240,8 @@ margin-top:31px
 }
 
 .btn{
+position:relative;
+overflow:hidden;
 padding:13px 19px;
 border-radius:12px;
 font-size:13px;
@@ -199,6 +258,18 @@ background:linear-gradient(110deg,#8d72f4,#6f8ff3);
 border:0;
 box-shadow:0 8px 35px #816cf344
 }
+
+/* light sweep on hover */
+.btn.primary:after{
+content:"";
+position:absolute;
+inset:0;
+background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.38) 50%,transparent 70%);
+transform:translateX(-120%);
+transition:transform .7s
+}
+
+.btn.primary:hover:after{transform:translateX(120%)}
 
 .btn:hover{
 transform:translateY(-4px);
@@ -264,13 +335,30 @@ background:linear-gradient(145deg,rgba(255,255,255,.16),rgba(255,255,255,.035));
 border:1px solid rgba(255,255,255,.22);
 box-shadow:0 35px 100px #0008,inset 0 1px rgba(255,255,255,.2);
 backdrop-filter:blur(22px);
-transform:rotateY(-8deg) rotateX(4deg);
-transition:transform .4s
+-webkit-backdrop-filter:blur(22px);
+transform:rotateY(var(--ry,-8deg)) rotateX(var(--rx,4deg));
+transition:transform .6s cubic-bezier(.2,.7,.2,1)
 }
 
-.profile-card:hover{
-transform:rotateY(0) rotateX(0) translateY(-7px)
+/* follows the pointer while it is over the hero visual */
+.profile-card.live{
+transform:rotateY(var(--ry)) rotateX(var(--rx)) translateY(-7px);
+transition:transform .1s linear
 }
+
+/* moving glare */
+.profile-card:after{
+content:"";
+position:absolute;
+inset:0;
+border-radius:inherit;
+pointer-events:none;
+background:radial-gradient(260px circle at var(--gx,50%) var(--gy,0%),rgba(255,255,255,.18),transparent 60%);
+opacity:0;
+transition:opacity .3s
+}
+
+.profile-card.live:after{opacity:1}
 
 .card-top{
 display:flex;
@@ -281,18 +369,29 @@ letter-spacing:.13em;
 text-transform:uppercase
 }
 
+/* only the ring turns; the photo stays upright */
 .avatar{
+position:relative;
 width:125px;
 height:125px;
 border-radius:50%;
 margin:38px auto 19px;
 padding:3px;
+overflow:hidden;
+box-shadow:0 0 45px rgba(156,123,255,.35)
+}
+
+.avatar:before{
+content:"";
+position:absolute;
+inset:-30%;
 background:conic-gradient(from 0deg,#a68cff,#70dbea,#ef9acb,#a68cff);
-animation:spin 9s linear infinite;
-overflow:hidden
+animation:spin 9s linear infinite
 }
 
 .avatar-photo{
+position:relative;
+z-index:1;
 width:100%;
 height:100%;
 display:block;
@@ -348,6 +447,7 @@ padding:12px 15px;
 border:1px solid var(--line);
 background:rgba(20,20,31,.72);
 backdrop-filter:blur(16px);
+-webkit-backdrop-filter:blur(16px);
 border-radius:14px;
 font-size:12px;
 color:#e6e1f4;
@@ -363,7 +463,40 @@ animation:bob 5s ease-in-out infinite
 50%{transform:translateY(-11px) rotate(2deg)}
 }
 
-.section{padding:28px 0 85px}
+/* scrolling strip made from the site's own lines */
+.marquee{
+overflow:hidden;
+border-top:1px solid var(--line);
+border-bottom:1px solid var(--line);
+padding:17px 0;
+-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);
+mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)
+}
+
+.track{
+display:flex;
+width:max-content;
+animation:marquee 34s linear infinite
+}
+
+.track span{
+font:700 clamp(18px,3vw,26px) Manrope;
+letter-spacing:-.03em;
+color:#d9d3ee;
+white-space:nowrap
+}
+
+.track i{
+font-style:normal;
+color:var(--violet);
+margin:0 26px
+}
+
+@keyframes marquee{
+to{transform:translateX(-50%)}
+}
+
+.section{padding:64px 0 85px}
 
 .heading{
 display:flex;
@@ -401,6 +534,7 @@ border:1px solid var(--line);
 border-radius:18px;
 background:var(--glass);
 backdrop-filter:blur(15px);
+-webkit-backdrop-filter:blur(15px);
 overflow:hidden;
 transition:.3s
 }
@@ -418,6 +552,20 @@ filter:blur(35px);
 opacity:.23;
 transition:.3s
 }
+
+/* spotlight that tracks the cursor inside each card */
+.social:after{
+content:"";
+position:absolute;
+inset:0;
+border-radius:inherit;
+pointer-events:none;
+background:radial-gradient(200px circle at var(--mx,50%) var(--my,0%),rgba(255,255,255,.13),transparent 62%);
+opacity:0;
+transition:opacity .3s
+}
+
+.social:hover:after{opacity:1}
 
 .social:hover{
 transform:translateY(-7px);
@@ -438,10 +586,25 @@ border-radius:13px;
 display:grid;
 place-items:center;
 background:rgba(255,255,255,.09);
-font:800 15px Manrope;
 color:white;
 margin-bottom:19px;
-position:relative
+position:relative;
+transition:.3s
+}
+
+.s-icon svg{
+width:21px;
+height:21px;
+fill:none;
+stroke:currentColor;
+stroke-width:1.8;
+stroke-linecap:round;
+stroke-linejoin:round
+}
+
+.social:hover .s-icon{
+background:rgba(255,255,255,.16);
+transform:scale(1.08) rotate(-4deg)
 }
 
 .s-name{font-weight:700;font-size:14px}
@@ -457,6 +620,15 @@ transition:.2s
 }
 
 .social:hover .arrow{transform:translate(3px,-3px)}
+
+.section.show .social{
+animation:rise .7s cubic-bezier(.2,.7,.2,1) backwards;
+animation-delay:calc(var(--i,0) * .08s)
+}
+
+@keyframes rise{
+from{opacity:0;transform:translateY(24px)}
+}
 
 .music{
 margin-top:17px;
@@ -481,6 +653,12 @@ display:grid;
 place-items:center;
 font-size:23px;
 box-shadow:0 7px 25px #8b76ff44
+}
+
+.music.playing .music-art{animation:pulse 2.4s ease-in-out infinite}
+
+@keyframes pulse{
+50%{transform:scale(1.07);box-shadow:0 7px 38px #8b76ff88}
 }
 
 .music-copy{flex:1}
@@ -523,8 +701,9 @@ transition:.2s
 
 .music-btn:hover{background:#ffffff20}
 
+/* bars sit low until music plays, then follow the real audio (JS) */
 .bars{
-height:25px;
+height:30px;
 display:flex;
 align-items:center;
 gap:3px
@@ -533,22 +712,14 @@ gap:3px
 .bars i{
 display:block;
 width:3px;
+height:4px;
 border-radius:4px;
-background:#b6a3ff;
-animation:equal 1s ease-in-out infinite alternate
+background:linear-gradient(180deg,#c9bbff,#7fdcec);
+opacity:.45;
+transition:height .09s linear,opacity .3s
 }
 
-.bars i:nth-child(1){height:8px}
-.bars i:nth-child(2){height:19px;animation-delay:-.3s}
-.bars i:nth-child(3){height:13px;animation-delay:-.6s}
-.bars i:nth-child(4){height:23px;animation-delay:-.2s}
-.bars i:nth-child(5){height:10px;animation-delay:-.8s}
-
-@keyframes equal{
-to{height:4px;opacity:.45}
-}
-
-.music.paused .bars i{animation-play-state:paused}
+.music.playing .bars i{opacity:1}
 
 .endnote{
 text-align:center;
@@ -597,7 +768,7 @@ transform:translateY(0)
 @media(max-width:760px){
 .hero{
 grid-template-columns:1fr;
-padding-top:58px;
+padding-top:48px;
 gap:0
 }
 .hero-copy{text-align:center}
@@ -612,8 +783,8 @@ gap:0
 
 @media(max-width:440px){
 .shell{width:calc(100% - 30px)}
-nav{height:68px}
-.hero{padding-top:45px}
+nav{height:64px}
+.hero{padding-top:38px}
 h1{font-size:68px}
 .visual{
 min-height:390px;
@@ -623,11 +794,13 @@ margin:-8px -15px
 .orbit{width:310px;height:310px}
 .orbit.inner{width:235px;height:235px}
 .profile-card{height:330px}
-.tag-a{right:-2px;top:35px}
+.tag-a{right:0;top:35px}
 .tag-b{left:-2px;bottom:40px}
 .social{min-height:135px;padding:16px}
 .music{flex-wrap:wrap}
 .music-btn{margin-left:auto}
+.bars i:nth-child(n+8){display:none}
+.section{padding:48px 0 70px}
 .endnote{padding:45px 0 52px}
 footer{font-size:10px}
 }
@@ -645,13 +818,15 @@ scroll-behavior:auto!important
 
 <body>
 
+<div class="progress" aria-hidden="true"></div>
+<div class="spot" aria-hidden="true"></div>
 <div class="noise"></div>
 <div class="blob one"></div>
 <div class="blob two"></div>
 <div class="blob three"></div>
 
+<header class="top">
 <div class="shell">
-
 <nav>
 <a class="logo" href="#top">ANSHU<span>®</span></a>
 <div class="navright">
@@ -660,6 +835,10 @@ scroll-behavior:auto!important
 <a class="pill" href="#links">Find me ↗</a>
 </div>
 </nav>
+</div>
+</header>
+
+<div class="shell">
 
 <main id="top">
 
@@ -700,7 +879,7 @@ Not a portfolio. Not a resume. Just my corner of the internet — the people, mu
 </div>
 
 <div class="avatar">
-<img src="IMG_20260603_215634_760.png" alt="Anshu's profile photo" class="avatar-photo">
+<img src="avatar.webp" width="480" height="480" alt="Anshu's profile photo" class="avatar-photo" decoding="async">
 </div>
 
 <div class="card-name">Anshu</div>
@@ -716,6 +895,13 @@ Not a portfolio. Not a resume. Just my corner of the internet — the people, mu
 
 </section>
 
+<div class="marquee" aria-hidden="true">
+<div class="track">
+<span>Good energy only</span><i>✦</i><span>Always on repeat</span><i>✦</i><span>In my own lane</span><i>✦</i><span>Stay a little</span><i>✦</i><span>Explore a little</span><i>✦</i><span>Just being me</span><i>✦</i>
+<span>Good energy only</span><i>✦</i><span>Always on repeat</span><i>✦</i><span>In my own lane</span><i>✦</i><span>Stay a little</span><i>✦</i><span>Explore a little</span><i>✦</i><span>Just being me</span><i>✦</i>
+</div>
+</div>
+
 <section class="section reveal" id="links">
 
 <div class="heading">
@@ -724,29 +910,38 @@ Not a portfolio. Not a resume. Just my corner of the internet — the people, mu
 
 <div class="social-grid">
 
-<a class="social" style="--glow:#ed6ca9" href="https://www.instagram.com/_anshu9s/" target="_blank" rel="noopener">
-<div class="s-icon">ig</div>
+<a class="social" style="--glow:#ed6ca9;--i:0" href="https://www.instagram.com/_anshu9s/" target="_blank" rel="noopener" aria-label="Instagram">
+<div class="s-icon">
+<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6"/></svg>
+</div>
 <div class="s-name">Instagram</div>
 <div class="s-sub">Little moments, daily life</div>
 <span class="arrow">↗</span>
 </a>
 
-<a class="social" style="--glow:#54d69a" href="https://open.spotify.com/user/31t7cwn37xclqa5smvu3jt4ksp3a" target="_blank" rel="noopener">
-<div class="s-icon">♫</div>
+<a class="social" style="--glow:#54d69a;--i:1" href="https://open.spotify.com/user/31t7cwn37xclqa5smvu3jt4ksp3a" target="_blank" rel="noopener" aria-label="Spotify">
+<div class="s-icon">
+<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M7 9.6c3.4-1 7-.7 10 1"/><path d="M7.6 12.7c2.8-.8 5.6-.5 8 .9"/><path d="M8.2 15.6c2.2-.6 4.3-.4 6.1.6"/></svg>
+</div>
 <div class="s-name">Spotify</div>
 <div class="s-sub">My music universe</div>
 <span class="arrow">↗</span>
 </a>
 
-<a class="social" style="--glow:#8795ff" href="https://discord.gg/kSSDvrbv" target="_blank" rel="noopener">
-<div class="s-icon">dc</div>
+<a class="social" style="--glow:#8795ff;--i:2" href="https://discord.gg/kSSDvrbv" target="_blank" rel="noopener" aria-label="Discord">
+<div class="s-icon">
+<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 6.5c3-1.4 6-1.4 9 0 1.9 2.8 2.9 5.7 3 8.7-1.4 1.2-2.9 1.9-4.4 2.2l-1-1.7c-1.4.4-2.8.4-4.2 0l-1 1.7c-1.5-.3-3-1-4.4-2.2.1-3 1.1-5.9 3-8.7z"/><circle cx="9.3" cy="12.2" r="1.1"/><circle cx="14.7" cy="12.2" r="1.1"/></svg>
+</div>
 <div class="s-name">Discord</div>
 <div class="s-sub">Let's hang out</div>
 <span class="arrow">↗</span>
 </a>
 
-<a class="social" style="--glow:#5bbce8" href="https://t.me/" target="_blank" rel="noopener">
-<div class="s-icon">tg</div>
+<!-- TODO: replace https://t.me/ with your Telegram username link, e.g. https://t.me/yourname -->
+<a class="social" style="--glow:#5bbce8;--i:3" href="https://t.me/" target="_blank" rel="noopener" aria-label="Telegram">
+<div class="s-icon">
+<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 4 3 11l6 2 2 6 3-4 5 3z"/><path d="M9 13 21 4"/></svg>
+</div>
 <div class="s-name">Telegram</div>
 <div class="s-sub">A quick hello</div>
 <span class="arrow">↗</span>
@@ -766,7 +961,7 @@ Not a portfolio. Not a resume. Just my corner of the internet — the people, mu
 </div>
 
 <div class="bars" aria-hidden="true">
-<i></i><i></i><i></i><i></i><i></i>
+<i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
 </div>
 
 <button class="music-btn" id="musicToggle" type="button">▶ Play Music</button>
@@ -789,6 +984,9 @@ Not a portfolio. Not a resume. Just my corner of the internet — the people, mu
 </div>
 
 <script>
+
+const finePointer=window.matchMedia("(hover:hover) and (pointer:fine)").matches;
+const calm=window.matchMedia("(prefers-reduced-motion:reduce)").matches;
 
 /* Scroll reveal */
 
@@ -813,17 +1011,78 @@ document.querySelectorAll(".reveal").forEach(el=>el.classList.add("show"));
 
 document.getElementById("year").textContent=new Date().getFullYear();
 
+/* Scroll progress + header blur */
+
+const header=document.querySelector(".top");
+const progress=document.querySelector(".progress");
+
+function onScroll(){
+const max=document.documentElement.scrollHeight-window.innerHeight;
+progress.style.transform="scaleX("+(max>0?Math.min(window.scrollY/max,1):0)+")";
+header.classList.toggle("scrolled",window.scrollY>12);
+}
+
+window.addEventListener("scroll",onScroll,{passive:true});
+onScroll();
+
+/* Cursor effects (mouse devices only) */
+
+if(finePointer && !calm){
+
+const spot=document.querySelector(".spot");
+
+window.addEventListener("pointermove",e=>{
+spot.style.setProperty("--x",e.clientX+"px");
+spot.style.setProperty("--y",e.clientY+"px");
+},{passive:true});
+
+const visual=document.querySelector(".visual");
+const card=document.querySelector(".profile-card");
+
+visual.addEventListener("pointermove",e=>{
+const r=card.getBoundingClientRect();
+const x=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));
+const y=Math.max(0,Math.min(1,(e.clientY-r.top)/r.height));
+card.style.setProperty("--ry",((x-.5)*18)+"deg");
+card.style.setProperty("--rx",((.5-y)*14)+"deg");
+card.style.setProperty("--gx",(x*100)+"%");
+card.style.setProperty("--gy",(y*100)+"%");
+card.classList.add("live");
+});
+
+visual.addEventListener("pointerleave",()=>{
+card.classList.remove("live");
+["--rx","--ry","--gx","--gy"].forEach(p=>card.style.removeProperty(p));
+});
+
+document.querySelectorAll(".social").forEach(el=>{
+el.addEventListener("pointermove",e=>{
+const r=el.getBoundingClientRect();
+el.style.setProperty("--mx",(e.clientX-r.left)+"px");
+el.style.setProperty("--my",(e.clientY-r.top)+"px");
+});
+});
+
+}
+
 /* Soft original instrumental background music */
 
 let audioContext=null;
 let masterGain=null;
+let analyser=null;
+let freqData=null;
 let musicTimer=null;
 let musicPlaying=false;
 let noteIndex=0;
+let barFrame=0;
 
 const musicButton=document.getElementById("musicToggle");
 const musicStatus=document.getElementById("musicStatus");
 const musicBox=document.querySelector(".music");
+const bars=Array.from(document.querySelectorAll(".bars i"));
+
+/* which analyser bin each bar listens to (about 90 Hz to 1.3 kHz) */
+let barBins=[];
 
 const melody=[
 261.63,329.63,392.00,493.88,
@@ -879,6 +1138,27 @@ playTone(frequency,now,2.4,index===0?0.012:0.009);
 noteIndex++;
 }
 
+/* equaliser bars driven by the actual sound */
+
+function drawBars(){
+
+if(!musicPlaying || !analyser)return;
+
+analyser.getByteFrequencyData(freqData);
+
+bars.forEach((bar,i)=>{
+const level=freqData[barBins[i]]/255;
+bar.style.height=(4+Math.pow(level,.8)*26)+"px";
+});
+
+barFrame=requestAnimationFrame(drawBars);
+}
+
+function resetBars(){
+cancelAnimationFrame(barFrame);
+bars.forEach(bar=>{bar.style.height=""});
+}
+
 async function startMusic(){
 
 try{
@@ -895,6 +1175,20 @@ audioContext=new AudioContextClass();
 
 masterGain=audioContext.createGain();
 masterGain.gain.value=0.55;
+
+analyser=audioContext.createAnalyser();
+analyser.fftSize=2048;
+analyser.smoothingTimeConstant=.82;
+analyser.minDecibels=-95;
+analyser.maxDecibels=-28;
+freqData=new Uint8Array(analyser.frequencyBinCount);
+
+const hzPerBin=audioContext.sampleRate/analyser.fftSize;
+const low=90/hzPerBin;
+const high=1300/hzPerBin;
+barBins=bars.map((_,i)=>Math.round(low*Math.pow(high/low,i/Math.max(bars.length-1,1))));
+
+masterGain.connect(analyser);
 masterGain.connect(audioContext.destination);
 
 }
@@ -911,7 +1205,9 @@ musicTimer=setInterval(playMusicStep,1700);
 
 musicButton.textContent="Ⅱ Pause Music";
 musicStatus.textContent="Your soft instrumental is playing.";
-musicBox.classList.remove("paused");
+musicBox.classList.add("playing");
+
+if(!calm)drawBars();
 
 }catch(error){
 
@@ -937,9 +1233,11 @@ audioContext.currentTime,
 );
 }
 
+resetBars();
+
 musicButton.textContent="▶ Play Music";
 musicStatus.textContent="Music paused.";
-musicBox.classList.add("paused");
+musicBox.classList.remove("playing");
 }
 
 musicButton.addEventListener("click",async()=>{

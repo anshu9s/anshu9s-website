@@ -503,7 +503,7 @@ let currentList=[];
 function lockJoin(message){
 el.name.disabled=true;
 el.joinBtn.disabled=true;
-el.name.placeholder="chat is offline";
+el.name.placeholder="opening soon";
 setHint(message,"");
 }
 
@@ -543,9 +543,10 @@ return;
 }
 
 if(!adapter){
-setState("offline","Not connected");
-showNotice("Chat isn't switched on yet","This page is ready, but the chat server hasn't been connected. Anshu: follow SETUP.md, or add ?demo to the address to preview it.");
-lockJoin("Chat will open once it's connected.");
+console.info("Chat is not connected. Add your Firebase config in firebase-config.js (see SETUP.md), or add ?demo to the URL to preview.");
+setState("offline","Opening soon");
+showNotice("The Lounge opens soon","The chat isn't open just yet. Check back in a little while. The rest of the site is all yours.");
+lockJoin("Chat opens soon.");
 renderHandle();
 return;
 }
